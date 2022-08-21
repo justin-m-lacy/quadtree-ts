@@ -213,19 +213,14 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
             const regions = this.getRegions(obj);
 
             for (let i = 0; i < 4; i++) {
-                if ((regions & (1 << i)) > 0) {
+                if (regions & (1 << i)) {
                     this.nodes[i].insert(obj);
                 }
             }
-            return;
-        }
 
-        //otherwise, store object here
-        this.objects.push(obj);
+        } else if (this.objects.length === this.maxObjects && this.level < this.maxLevels) {
 
-        //maxObjects reached
-        if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
-
+            //maxObjects reached
             //split if we don't already have subnodes
             if (!this.nodes.length) {
                 this.split();
@@ -243,6 +238,9 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
 
             //clean up this node
             this.objects = [];
+        } else {
+            //otherwise, store object here
+            this.objects.push(obj);
         }
     }
 
@@ -260,26 +258,41 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
      * @param obj - geometry to be checked
      * @returns Array containing all detected objects.
      */
-    retrieve(obj: Rectangle | Circle | Line | Indexable): ObjectsType[] {
+    retrieve(obj: Rectangle | Circle | Line | Indexable, results?: ObjectsType[]): ObjectsType[] {
 
-        const regions = this.getRegions(obj);
-        let returnObjects = this.objects;
+        return this._retrieve(obj, results ?? new Array<ObjectsType>());
 
-        //if we have subnodes, retrieve their objects
-        if (this.nodes.length) {
+    }
+
+    private _retrieve(obj: Rectangle | Circle | Line | Indexable, results: ObjectsType[]): ObjectsType[] {
+
+
+        let localObjects = this.objects;
+
+        if (localObjects.length) {
+
+            for (let i = localObjects.length - 1; i >= 0; i--) {
+                if (results.indexOf(localObjects[i]) < 0) {
+                    results.push(localObjects[i]);
+                }
+            }
+
+        } else if (this.nodes.length) {
+
+            const regions = this.getRegions(obj);
+
+            //if we have subnodes, retrieve their objects
             for (let i = 0; i < 4; i++) {
                 if (regions & QuadRegions.FromIndex(i)) {
-                    returnObjects = returnObjects.concat(this.nodes[i].retrieve(obj));
+
+
+                    localObjects = localObjects.concat(this.nodes[i]._retrieve(obj, results));
+
                 }
             }
         }
 
-        //remove duplicates
-        returnObjects = returnObjects.filter(function (item, index) {
-            return returnObjects.indexOf(item) >= index;
-        });
-
-        return returnObjects;
+        return results;
     }
 
 

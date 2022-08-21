@@ -10,7 +10,6 @@ describe('Quadtree.retrieve', () => {
 
     test('returns array', () => {
         const tree = new Quadtree({ width: 100, height: 100 });
-        const rect = new Rectangle({ x: 0, y: 0, width: 100, height: 100 });
         const retrieve = new Rectangle({ x: 0, y: 0, width: 100, height: 100 });
         expect(Array.isArray(tree.retrieve(retrieve))).toBe(true);
     });
