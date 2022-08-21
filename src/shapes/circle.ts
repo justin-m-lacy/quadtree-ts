@@ -222,8 +222,8 @@ export class Circle<CustomDataType = void> implements CircleGeometry, Indexable 
 
         //an array of node origins where the array index equals the node index
         const nodes = [
-            [x2, node.y],
             [node.x, node.y],
+            [x2, node.y],
             [node.x, y2],
             [x2, y2],
         ];

@@ -5,8 +5,8 @@ export type QuadRegion = number;
 export class QuadRegions {
 
     static readonly None = 0;
-    static readonly TopRight = 1 << 0;
-    static readonly TopLeft = 1 << 1;
+    static readonly TopLeft = 1 << 0;
+    static readonly TopRight = 1 << 1;
     static readonly BottomLeft = 1 << 2;
     static readonly BottomRight = 1 << 3;
 
