@@ -3,9 +3,9 @@ import { Indexable, NodeGeometry } from '../src/types';
 
 export const testQtRegion = (shape: Indexable): void => {
 
-    test(`qtRegion returns QuadRegion`), () => {
+    test(`qtRegion returns QuadRegion`, () => {
         expect(typeof shape.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toBe('number');
-    }
+    });
 
 }
 
@@ -41,7 +41,7 @@ export const testRegions = (
     if (shapes.top) testTop(shapes.top, geometry);
     if (shapes.bottom) testBottom(shapes.bottom, geometry);
     if (shapes.right) testRight(shapes.right, geometry);
-    if (shapes.topLeft) testLeft(shapes.left, geometry);
+    if (shapes.left) testLeft(shapes.left, geometry);
     if (shapes.positiveSlope) testPositiveSlope(shapes.positiveSlope, geometry)
     if (shapes.negativeSlope) testNegativeSlope(shapes.negativeSlope, geometry);
     if (shapes.all) testAll(shapes.all, geometry)
