@@ -10,6 +10,7 @@
   "types": "types/index.esm.d.ts",
   "scripts": {
     "build": "npm run rollup && npm run docs && npm run dts",
+    "prepare": "npm run rollup",
     "rollup": "rollup -c",
     "dev": "rollup -c -w",
     "lint": "eslint --ext .ts src/",
