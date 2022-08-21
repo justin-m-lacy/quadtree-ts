@@ -258,16 +258,10 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
      * @param obj - geometry to be checked
      * @returns Array containing all detected objects.
      */
-    retrieve(obj: Rectangle | Circle | Line | Indexable, results?: ObjectsType[]): ObjectsType[] {
-
-        return this._retrieve(obj, results ?? new Array<ObjectsType>());
-
-    }
-
-    private _retrieve(obj: Rectangle | Circle | Line | Indexable, results: ObjectsType[]): ObjectsType[] {
+    retrieve(obj: Rectangle | Circle | Line | Indexable, results: ObjectsType[] = []): ObjectsType[] {
 
 
-        let localObjects = this.objects;
+        const localObjects = this.objects;
 
         if (localObjects.length) {
 
@@ -284,10 +278,7 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
             //if we have subnodes, retrieve their objects
             for (let i = 0; i < 4; i++) {
                 if (regions & QuadRegions.FromIndex(i)) {
-
-
-                    localObjects = localObjects.concat(this.nodes[i]._retrieve(obj, results));
-
+                    this.nodes[i].retrieve(obj, results);
                 }
             }
         }
