@@ -1,7 +1,8 @@
 import type { NodeGeometry, Indexable } from './types';
-import type { Rectangle } from './rectangle';
-import type { Circle } from './Circle';
-import type { Line } from './line';
+import type { Rectangle } from './shapes/rectangle';
+import type { Circle } from './shapes/circle';
+import type { Line } from './shapes/line';
+import { QuadRegion } from './regions';
 /**
  * Quadtree Constructor Properties
  */
@@ -115,9 +116,9 @@ export declare class Quadtree<ObjectsType extends Rectangle | Circle | Line | In
      * ```
      *
      * @param obj - object to be checked
-     * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right).
+     * @returns Array containing indices of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right).
      */
-    getIndex(obj: Rectangle | Circle | Line | Indexable): number[];
+    getRegions(obj: Rectangle | Circle | Line | Indexable): QuadRegion;
     /**
      * Split the node into 4 subnodes.
      * @internal
@@ -159,7 +160,7 @@ export declare class Quadtree<ObjectsType extends Rectangle | Circle | Line | In
      * @param obj - geometry to be checked
      * @returns Array containing all detected objects.
      */
-    retrieve(obj: Rectangle | Circle | Line | Indexable): ObjectsType[];
+    retrieve(obj: Rectangle | Circle | Line | Indexable, results?: ObjectsType[]): ObjectsType[];
     /**
      * Clear the Quadtree.
      *

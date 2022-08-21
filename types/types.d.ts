@@ -1,3 +1,4 @@
+import { QuadRegion } from './regions';
 /**
  * All shape classes must implement this interface.
  */
@@ -8,7 +9,7 @@ export interface Indexable {
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtRegions(node: NodeGeometry): number[];
+    qtRegions(node: NodeGeometry): QuadRegion;
 }
 /**
  * Interface for geometry of a Quadtree node

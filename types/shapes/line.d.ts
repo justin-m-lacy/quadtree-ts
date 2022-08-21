@@ -1,4 +1,5 @@
-import type { NodeGeometry, Indexable } from './types';
+import type { NodeGeometry, Indexable } from '../types';
+import { QuadRegion } from '../regions';
 /**
  * Line Geometry
  * @beta
@@ -207,7 +208,7 @@ export declare class Line<CustomDataType = void> implements LineGeometry, Indexa
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtRegions(node: NodeGeometry): number[];
+    qtRegions(node: NodeGeometry): QuadRegion;
     /**
      * check if a line segment (the first 4 parameters) intersects an axis aligned rectangle (the last 4 parameters)
      * @beta

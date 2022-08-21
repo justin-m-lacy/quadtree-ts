@@ -1,9 +1,10 @@
-export { Quadtree } from './Quadtree';
-export { Rectangle } from './Rectangle';
-export { Circle } from './Circle';
-export { Line } from './Line';
-export type { QuadtreeProps } from './Quadtree';
-export type { CircleProps, CircleGeometry } from './Circle';
-export type { LineProps, LineGeometry } from './Line';
-export type { RectangleProps, RectangleGeometry } from './Rectangle';
+export { QuadRegions, QuadRegion } from './regions';
+export { Quadtree } from './quadtree';
+export { Rectangle } from './shapes/rectangle';
+export { Circle } from './shapes/circle';
+export { Line } from './shapes/line';
+export type { QuadtreeProps } from './quadtree';
+export type { CircleProps, CircleGeometry } from './shapes/circle';
+export type { LineProps, LineGeometry } from './shapes/line';
+export type { RectangleProps, RectangleGeometry } from './shapes/rectangle';
 export type { NodeGeometry, Indexable } from './types';
