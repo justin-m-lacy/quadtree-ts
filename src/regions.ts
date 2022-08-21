@@ -10,6 +10,8 @@ export class QuadRegions {
     static readonly BottomLeft = 1 << 2;
     static readonly BottomRight = 1 << 3;
 
+    static readonly All = QuadRegions.TopRight | QuadRegions.TopLeft | QuadRegions.BottomLeft | QuadRegions.BottomRight;
+
     static readonly Top = QuadRegions.TopLeft | QuadRegions.TopRight;
     static readonly Bottom = QuadRegions.BottomLeft | QuadRegions.BottomRight;
 

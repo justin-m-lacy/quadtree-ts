@@ -1,5 +1,5 @@
-import { Quadtree } from '../../src/Quadtree';
-import { Rectangle } from '../../src/Rectangle';
+import { Quadtree } from '../../src/quadtree';
+import { Rectangle } from '../../src/shapes/rectangle';
 
 describe('Quadtree.retrieve', () => {
 
@@ -45,6 +45,6 @@ describe('Quadtree.retrieve', () => {
         tree.split();
         tree.insert(rect);
         const result = tree.retrieve(rect);
-        expect(result).toHaveLength(1);        
+        expect(result).toHaveLength(1);
     });
 });

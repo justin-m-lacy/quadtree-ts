@@ -1,4 +1,6 @@
 import { Circle } from '../../src/shapes/circle';
+import { testQtRegion, testRegions } from '../includes';
+import { QuadRegions } from '../../src/regions';
 
 describe('Circle.prototype.qtRegions', () => {
 
@@ -6,54 +8,19 @@ describe('Circle.prototype.qtRegions', () => {
         expect(typeof Circle.prototype.qtRegions).toBe('function');
     });
 
-    test('returns an array', () => {
-        const circle = new Circle({ x: 20, y: 40, r: 100 });
-        expect(Array.isArray(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 }))).toBe(true);
-    });
+    testQtRegion(new Circle({ x: 20, y: 40, r: 100 }));
 
-    test('identifies quadrant top right', () => {
-        const circle = new Circle({ x: 75, y: 25, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([0]);
-    });
+    testRegions({
 
-    test('identifies quadrant top left', () => {
-        const circle = new Circle({ x: 25, y: 25, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([1]);
-    });
-
-    test('identifies quadrant bottom left', () => {
-        const circle = new Circle({ x: 25, y: 75, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([2]);
-    });
-
-    test('identifies quadrant bottom right', () => {
-        const circle = new Circle({ x: 75, y: 75, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([3]);
-    });
-
-    test('identifies overlapping top', () => {
-        const circle = new Circle({ x: 50, y: 25, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([0, 1]);
-    });
-
-    test('identifies overlapping bottom', () => {
-        const circle = new Circle({ x: 50, y: 75, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([2, 3]);
-    });
-
-    test('identifies overlapping left', () => {
-        const circle = new Circle({ x: 25, y: 50, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([1, 2]);
-    });
-
-    test('identifies overlapping right', () => {
-        const circle = new Circle({ x: 75, y: 50, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([0, 3]);
-    });
-
-    test('identifies all', () => {
-        const circle = new Circle({ x: 50, y: 50, r: 10 });
-        expect(circle.qtRegions({ x: 0, y: 0, width: 100, height: 100 })).toEqual([0, 1, 2, 3]);
+        topRight: new Circle({ x: 75, y: 25, r: 10 }),
+        topLeft: new Circle({ x: 25, y: 25, r: 10 }),
+        bottomLeft: new Circle({ x: 25, y: 75, r: 10 }),
+        bottomRight: new Circle({ x: 75, y: 75, r: 10 }),
+        top: new Circle({ x: 50, y: 25, r: 10 }),
+        bottom: new Circle({ x: 50, y: 75, r: 10 }),
+        left: new Circle({ x: 25, y: 50, r: 10 }),
+        right: new Circle({ x: 75, y: 50, r: 10 }),
+        all: new Circle({ x: 50, y: 50, r: 10 })
     });
 
     test('identifies edge', () => {
@@ -69,15 +36,15 @@ describe('Circle.prototype.qtRegions', () => {
         //      |▮ <-- only in bottom right quadrant
         //      |
 
-        expect(topLeft.qtRegions(node)).toEqual([1]);
-        expect(bottomRight.qtRegions(node)).toEqual([3]);
+        expect(topLeft.qtRegions(node)).toEqual(QuadRegions.TopLeft);
+        expect(bottomRight.qtRegions(node)).toEqual(QuadRegions.BottomRight);
 
         const smallest = 0.0000000000001;
         topLeft.x += smallest;
         topLeft.y += smallest;
         bottomRight.x -= smallest;
         bottomRight.y -= smallest;
-        expect(topLeft.qtRegions(node)).toEqual([0, 1, 2]);
-        expect(bottomRight.qtRegions(node)).toEqual([0, 2, 3]);
+        expect(topLeft.qtRegions(node)).toEqual(QuadRegions.Top | QuadRegions.BottomLeft);
+        expect(bottomRight.qtRegions(node)).toEqual(QuadRegions.Bottom | QuadRegions.TopRight);
     });
 });

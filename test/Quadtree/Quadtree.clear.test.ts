@@ -1,5 +1,5 @@
-import { Quadtree } from '../../src/Quadtree';
-import { Rectangle } from '../../src/Rectangle';
+import { Quadtree } from '../../src/quadtree';
+import { Rectangle } from '../../src/shapes/rectangle';
 
 describe('Quadtree.clear', () => {
 

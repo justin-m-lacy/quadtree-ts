@@ -1,4 +1,4 @@
-import { Quadtree } from '../../src/Quadtree';
+import { Quadtree } from '../../src/quadtree';
 
 describe('Quadtree.split', () => {
 
@@ -21,7 +21,7 @@ describe('Quadtree.split', () => {
     test('subnodes are of class Quadtree', () => {
         const tree = new Quadtree({ width: 100, height: 100 });
         tree.split();
-        for(let i=0; i < 4; i++) {
+        for (let i = 0; i < 4; i++) {
             expect(tree.nodes[i]).toBeInstanceOf(Quadtree);
         }
     });
@@ -29,10 +29,10 @@ describe('Quadtree.split', () => {
     test('subnodes are increasing in level', () => {
         const tree = new Quadtree({ width: 100, height: 100 });
         let lastTree = tree;
-        for(let depth=0; depth < 4; depth++) {
+        for (let depth = 0; depth < 4; depth++) {
             lastTree.split();
-            for(let i=0; i < 4; i++) {
-                expect(lastTree.nodes[i].level).toBe(depth+1);
+            for (let i = 0; i < 4; i++) {
+                expect(lastTree.nodes[i].level).toBe(depth + 1);
             }
 
             lastTree = lastTree.nodes[0];
@@ -41,8 +41,8 @@ describe('Quadtree.split', () => {
 
     test('subnodes inherit max levels and objects', () => {
         const tree = new Quadtree({ width: 100, height: 100, maxObjects: 5, maxLevels: 3 });
-        tree.split();         
-        for(let i=0; i < 4; i++) {
+        tree.split();
+        for (let i = 0; i < 4; i++) {
             expect(tree.nodes[i].maxObjects).toBe(5);
             expect(tree.nodes[i].maxLevels).toBe(3);
         }
