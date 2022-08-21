@@ -87,7 +87,7 @@ export interface CircleProps<CustomDataType = void> extends CircleGeometry {
  *
  * @example With custom class extending Circle (implements {@link CircleGeometry} (x, y, r)):
  * ```javascript
- * // extending inherits the qtIndex method
+ * // extending inherits the qtRegions method
  * class Bomb extends Circle {
  *
  *   constructor(props) {
@@ -116,10 +116,10 @@ export interface CircleProps<CustomDataType = void> extends CircleGeometry {
  *     this.radius = 30;
  *   }
  *
- *   // add a qtIndex method to your class
- *   qtIndex(node) {
+ *   // add a qtRegions method to your class
+ *   qtRegions(node) {
  *     // map your properties to CircleGeometry
- *     return Circle.prototype.qtIndex.call({
+ *     return Circle.prototype.qtRegions.call({
  *       x: this.position[0],
  *       y: this.position[1],
  *       r: this.radius,
@@ -138,22 +138,22 @@ export interface CircleProps<CustomDataType = void> extends CircleGeometry {
  *   x: 10,
  *   y: 20,
  *   r: 30,
- *   qtIndex: Circle.prototype.qtIndex,
+ *   qtRegions: Circle.prototype.qtRegions,
  * });
  * ```
  *
  * @example With custom object and mapping {@link CircleGeometry}:
  * ```javascript
  * // Note: this is not recommended but possible.
- * // Using this technique, each object would have it's own qtIndex method.
- * // Rather add qtIndex to your prototype, e.g. by using classes like shown above.
+ * // Using this technique, each object would have it's own qtRegions method.
+ * // Rather add qtRegions to your prototype, e.g. by using classes like shown above.
  * const player = {
  *   name: 'Jane',
  *   health: 100,
  *   position: [10, 20],
  *   radius: 30,
- *   qtIndex: function(node) {
- *     return Circle.prototype.qtIndex.call({
+ *   qtRegions: function(node) {
+ *     return Circle.prototype.qtRegions.call({
  *       x: this.position[0],
  *       y: this.position[1],
  *       r: this.radius,
@@ -190,7 +190,7 @@ export declare class Circle<CustomDataType = void> implements CircleGeometry, In
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtIndex(node: NodeGeometry): number[];
+    qtRegions(node: NodeGeometry): number[];
     /**
      * Check if a circle intersects an axis aligned rectangle.
      * @beta

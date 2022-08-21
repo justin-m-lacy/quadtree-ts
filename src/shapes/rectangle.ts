@@ -1,4 +1,6 @@
-import type { NodeGeometry, Indexable } from './types';
+import type { NodeGeometry, Indexable } from '../types';
+
+import { QuadRegion, QuadRegions } from '../regions';
 
 /**
  * Rectangle Geometry
@@ -223,10 +225,10 @@ export class Rectangle<CustomDataType = void> implements RectangleGeometry, Inde
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtIndex(node: NodeGeometry): number[] {
+    qtRegions(node: NodeGeometry): QuadRegion {
 
-        const indexes: number[] = [],
-            boundsCenterX = node.x + (node.width / 2),
+        let regions: QuadRegion = QuadRegions.None;
+        const boundsCenterX = node.x + (node.width / 2),
             boundsCenterY = node.y + (node.height / 2);
 
         const startIsNorth = this.y < boundsCenterY,
@@ -236,24 +238,24 @@ export class Rectangle<CustomDataType = void> implements RectangleGeometry, Inde
 
         //top-right quad
         if (startIsNorth && endIsEast) {
-            indexes.push(0);
+            regions |= QuadRegions.TopRight;
         }
 
         //top-left quad
         if (startIsWest && startIsNorth) {
-            indexes.push(1);
+            regions |= QuadRegions.TopLeft;
         }
 
         //bottom-left quad
         if (startIsWest && endIsSouth) {
-            indexes.push(2);
+            regions |= QuadRegions.BottomLeft;
         }
 
         //bottom-right quad
         if (endIsEast && endIsSouth) {
-            indexes.push(3);
+            regions |= QuadRegions.BottomRight;
         }
 
-        return indexes;
+        return regions;
     }
 }

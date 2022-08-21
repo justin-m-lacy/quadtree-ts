@@ -8,7 +8,7 @@ export interface Indexable {
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtIndex(node: NodeGeometry): number[];
+    qtRegions(node: NodeGeometry): number[];
 }
 /**
  * Interface for geometry of a Quadtree node

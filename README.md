@@ -123,7 +123,7 @@ All shapes can be inserted or used for retrieval.
 Each shape requires properties specific to their geometry.
 
 | Shape     | Required Properties |
-|-----------|---------------------|
+| --------- | ------------------- |
 | Rectangle | x, y, width, height |
 | Circle    | x, y, r             |
 | Line      | x1, y1, x2, y2      |
@@ -182,7 +182,7 @@ const circle = new Circle({
 
 ### Custom integration
 
-Under the hood all shape classes implement a `qtIndex` method that is crucial for determining in which quadrant a shape belongs. You can think of it as a shape identifier. An alternative to using the class constructors is to supply your own `qtIndex` function for objects you want the Quadtree to interact with. 
+Under the hood all shape classes implement a `qtRegions` method that is crucial for determining in which quadrant a shape belongs. You can think of it as a shape identifier. An alternative to using the class constructors is to supply your own `qtRegions` function for objects you want the Quadtree to interact with. 
 
 This is also helpful if your existing object properties don't match the required shape properties and you have to map them.
 
@@ -190,7 +190,7 @@ This is also helpful if your existing object properties don't match the required
 // Custom integration without mapping properties
 // In this case the custom object has all the 
 // expected shape properties (x1, y1, x2, y2)
-// So we can simply reference the qtIndex method
+// So we can simply reference the qtRegions method
 const redLaser = {
     color: 'red',
     brightness: 10,
@@ -198,7 +198,7 @@ const redLaser = {
     y1: 67, 
     x2: 128, 
     y2: 128,
-    qtIndex: Line.prototype.qtIndex
+    qtRegions: Line.prototype.qtRegions
 }
 myTree.insert(redLaser);
 
@@ -209,8 +209,8 @@ const greenLaser = {
     brightness: 10,
     startPoint: [50, 50],
     endPoint: [100, 50],
-    qtIndex: function(node) {
-        return Line.prototype.qtIndex.call({
+    qtRegions: function(node) {
+        return Line.prototype.qtRegions.call({
             x1: this.startPoint[0],
             y1: this.startPoint[1],
             x2: this.endPoint[0],
@@ -222,7 +222,7 @@ myTree.insert(greenLaser);
 
 // Custom integration with mapping in a class
 // If you have many instances of the same thing, 
-// I recommend adding the qtIndex to your class/prototype
+// I recommend adding the qtRegions to your class/prototype
 class Bomb {
 
     constructor() {
@@ -230,8 +230,8 @@ class Bomb {
         this.radius = 100;
     }
 
-    qtIndex(node) {
-        return Circle.prototype.qtIndex.call({
+    qtRegions(node) {
+        return Circle.prototype.qtRegions.call({
             x: this.position[0],
             y: this.position[1],
             r: this.radius,
@@ -320,6 +320,6 @@ Folder structure
   * `maxObjects` and `maxLevels` are now named properties. 
   * Also, `x` and `y` are now optional. 
   * Change `new Quadtree({x: 0, y: 0, width: 100, height: 100}, 5, 2);` to `new Quadtree({width: 100, height: 100, maxObjects: 5, maxLevels: 2});`
-* Objects interacting with the Quadtree need to be a shape class or implement a `qtIndex` method (see above)
+* Objects interacting with the Quadtree need to be a shape class or implement a `qtRegions` method (see above)
 * Bundle filename has changed: `quadtree.umd.full.js`
 * Typescript: Use `Rectangle` instead of `Rect`

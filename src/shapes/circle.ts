@@ -1,4 +1,6 @@
-import type { NodeGeometry, Indexable } from './types';
+import { QuadRegion, QuadRegions } from '../regions';
+import { NodeGeometry, Indexable } from '../types';
+
 
 /**
  * Circle Geometry
@@ -94,7 +96,7 @@ export interface CircleProps<CustomDataType = void> extends CircleGeometry {
  * 
  * @example With custom class extending Circle (implements {@link CircleGeometry} (x, y, r)):
  * ```javascript
- * // extending inherits the qtIndex method
+ * // extending inherits the qtRegions method
  * class Bomb extends Circle {
  *   
  *   constructor(props) {
@@ -123,10 +125,10 @@ export interface CircleProps<CustomDataType = void> extends CircleGeometry {
  *     this.radius = 30;
  *   }
  *   
- *   // add a qtIndex method to your class
- *   qtIndex(node) {
+ *   // add a qtRegions method to your class
+ *   qtRegions(node) {
  *     // map your properties to CircleGeometry
- *     return Circle.prototype.qtIndex.call({
+ *     return Circle.prototype.qtRegions.call({
  *       x: this.position[0],
  *       y: this.position[1],
  *       r: this.radius,
@@ -145,22 +147,22 @@ export interface CircleProps<CustomDataType = void> extends CircleGeometry {
  *   x: 10, 
  *   y: 20, 
  *   r: 30,
- *   qtIndex: Circle.prototype.qtIndex,
+ *   qtRegions: Circle.prototype.qtRegions,
  * });
  * ```
  * 
  * @example With custom object and mapping {@link CircleGeometry}:
  * ```javascript
  * // Note: this is not recommended but possible. 
- * // Using this technique, each object would have it's own qtIndex method. 
- * // Rather add qtIndex to your prototype, e.g. by using classes like shown above.
+ * // Using this technique, each object would have it's own qtRegions method. 
+ * // Rather add qtRegions to your prototype, e.g. by using classes like shown above.
  * const player = {
  *   name: 'Jane', 
  *   health: 100,
  *   position: [10, 20], 
  *   radius: 30,
- *   qtIndex: function(node) {
- *     return Circle.prototype.qtIndex.call({
+ *   qtRegions: function(node) {
+ *     return Circle.prototype.qtRegions.call({
  *       x: this.position[0],
  *       y: this.position[1],
  *       r: this.radius,
@@ -209,10 +211,11 @@ export class Circle<CustomDataType = void> implements CircleGeometry, Indexable 
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtIndex(node: NodeGeometry): number[] {
+    qtRegions(node: NodeGeometry): QuadRegion {
 
-        const indexes: number[] = [],
-            w2 = node.width / 2,
+        let regions: QuadRegion = QuadRegions.None;
+
+        const w2 = node.width / 2,
             h2 = node.height / 2,
             x2 = node.x + w2,
             y2 = node.y + h2;
@@ -228,11 +231,11 @@ export class Circle<CustomDataType = void> implements CircleGeometry, Indexable 
         //test all nodes for circle intersections
         for (let i = 0; i < nodes.length; i++) {
             if (Circle.intersectRect(this.x, this.y, this.r, nodes[i][0], nodes[i][1], nodes[i][0] + w2, nodes[i][1] + h2)) {
-                indexes.push(i);
+                regions |= QuadRegions.FromIndex(i);
             }
         }
 
-        return indexes;
+        return regions;
     }
 
     /**

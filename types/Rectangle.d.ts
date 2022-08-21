@@ -95,7 +95,7 @@ export interface RectangleProps<CustomDataType = void> extends RectangleGeometry
  *
  * @example With custom class extending Rectangle (implements {@link RectangleGeometry} (x, y, width, height)):
  * ```javascript
- * // extending inherits the qtIndex method
+ * // extending inherits the qtRegions method
  * class Box extends Rectangle {
  *
  *   constructor(props) {
@@ -125,10 +125,10 @@ export interface RectangleProps<CustomDataType = void> extends RectangleGeometry
  *     this.size = [30, 40];
  *   }
  *
- *   // add a qtIndex method to your class
- *   qtIndex(node) {
+ *   // add a qtRegions method to your class
+ *   qtRegions(node) {
  *     // map your properties to RectangleGeometry
- *     return Rectangle.prototype.qtIndex.call({
+ *     return Rectangle.prototype.qtRegions.call({
  *       x: this.position[0],
  *       y: this.position[1],
  *       width: this.size[0],
@@ -149,22 +149,22 @@ export interface RectangleProps<CustomDataType = void> extends RectangleGeometry
  *   y: 20,
  *   width: 30,
  *   height: 30,
- *   qtIndex: Rectangle.prototype.qtIndex,
+ *   qtRegions: Rectangle.prototype.qtRegions,
  * });
  * ```
  *
  * @example With custom object and mapping {@link RectangleGeometry}:
  * ```javascript
  * // Note: this is not recommended but possible.
- * // Using this technique, each object would have it's own qtIndex method.
- * // Rather add qtIndex to your prototype, e.g. by using classes like shown above.
+ * // Using this technique, each object would have it's own qtRegions method.
+ * // Rather add qtRegions to your prototype, e.g. by using classes like shown above.
  * const player = {
  *   name: 'Jane',
  *   health: 100,
  *   position: [10, 20],
  *   size: [30, 40],
- *   qtIndex: function(node) {
- *     return Rectangle.prototype.qtIndex.call({
+ *   qtRegions: function(node) {
+ *     return Rectangle.prototype.qtRegions.call({
  *       x: this.position[0],
  *       y: this.position[1],
  *       width: this.size[0],
@@ -201,5 +201,5 @@ export declare class Rectangle<CustomDataType = void> implements RectangleGeomet
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtIndex(node: NodeGeometry): number[];
+    qtRegions(node: NodeGeometry): number[];
 }

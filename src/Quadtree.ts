@@ -1,7 +1,8 @@
 import type { NodeGeometry, Indexable } from './types';
-import type { Rectangle } from './Rectangle';
-import type { Circle } from './Circle';
-import type { Line } from './Line';
+import type { Rectangle } from './shapes/rectangle';
+import type { Circle } from './shapes/circle';
+import type { Line } from './shapes/line';
+import { QuadRegion, QuadRegions } from './regions';
 
 /**
  * Quadtree Constructor Properties
@@ -145,10 +146,10 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
      * ```
      * 
      * @param obj - object to be checked
-     * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right).
+     * @returns Array containing indices of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right).
      */
-    getIndex(obj: Rectangle | Circle | Line | Indexable): number[] {
-        return obj.qtIndex(this.bounds);
+    getRegions(obj: Rectangle | Circle | Line | Indexable): QuadRegion {
+        return obj.qtRegions(this.bounds);
     }
 
     /**
@@ -195,7 +196,7 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
      * exceeds the capacity, it will split and add all
      * objects to their corresponding subnodes.
      * 
-     * @example you can use any shape here (or object with a qtIndex method, see README):
+     * @example you can use any shape here (or object with a qtRegions method, see README):
      * ```typescript
      * const tree = new Quadtree({ width: 100, height: 100 });
      * tree.insert(new Rectangle({ x: 25, y: 25, width: 10, height: 10, data: 'data' }));
@@ -209,10 +210,12 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
 
         //if we have subnodes, call insert on matching subnodes
         if (this.nodes.length) {
-            const indexes = this.getIndex(obj);
+            const regions = this.getRegions(obj);
 
-            for (let i = 0; i < indexes.length; i++) {
-                this.nodes[indexes[i]].insert(obj);
+            for (let i = 0; i < 4; i++) {
+                if ((regions & (1 << i)) > 0) {
+                    this.nodes[i].insert(obj);
+                }
             }
             return;
         }
@@ -230,9 +233,11 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
 
             //add all objects to their corresponding subnode
             for (let i = 0; i < this.objects.length; i++) {
-                const indexes = this.getIndex(this.objects[i]);
-                for (let k = 0; k < indexes.length; k++) {
-                    this.nodes[indexes[k]].insert(this.objects[i]);
+                const regions = this.getRegions(this.objects[i]);
+                for (let k = 0; k < 4; k++) {
+                    if (regions & (1 << k)) {
+                        this.nodes[k].insert(this.objects[i]);
+                    }
                 }
             }
 
@@ -245,7 +250,7 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
     /**
      * Return all objects that could collide with the given geometry.
      * 
-     * @example Just like insert, you can use any shape here (or object with a qtIndex method, see README):
+     * @example Just like insert, you can use any shape here (or object with a qtRegions method, see README):
      * ```typescript 
      * tree.retrieve(new Rectangle({ x: 25, y: 25, width: 10, height: 10, data: 'data' }));
      * tree.retrieve(new Circle({ x: 25, y: 25, r: 10, data: 512 }));
@@ -257,13 +262,15 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
      */
     retrieve(obj: Rectangle | Circle | Line | Indexable): ObjectsType[] {
 
-        const indexes = this.getIndex(obj);
+        const regions = this.getRegions(obj);
         let returnObjects = this.objects;
 
         //if we have subnodes, retrieve their objects
         if (this.nodes.length) {
-            for (let i = 0; i < indexes.length; i++) {
-                returnObjects = returnObjects.concat(this.nodes[indexes[i]].retrieve(obj));
+            for (let i = 0; i < 4; i++) {
+                if (regions & QuadRegions.FromIndex(i)) {
+                    returnObjects = returnObjects.concat(this.nodes[i].retrieve(obj));
+                }
             }
         }
 

@@ -1,7 +1,7 @@
 import type { NodeGeometry, Indexable } from './types';
-import type { Rectangle } from './Rectangle';
+import type { Rectangle } from './rectangle';
 import type { Circle } from './Circle';
-import type { Line } from './Line';
+import type { Line } from './line';
 /**
  * Quadtree Constructor Properties
  */
@@ -135,7 +135,7 @@ export declare class Quadtree<ObjectsType extends Rectangle | Circle | Line | In
      * exceeds the capacity, it will split and add all
      * objects to their corresponding subnodes.
      *
-     * @example you can use any shape here (or object with a qtIndex method, see README):
+     * @example you can use any shape here (or object with a qtRegions method, see README):
      * ```typescript
      * const tree = new Quadtree({ width: 100, height: 100 });
      * tree.insert(new Rectangle({ x: 25, y: 25, width: 10, height: 10, data: 'data' }));
@@ -149,7 +149,7 @@ export declare class Quadtree<ObjectsType extends Rectangle | Circle | Line | In
     /**
      * Return all objects that could collide with the given geometry.
      *
-     * @example Just like insert, you can use any shape here (or object with a qtIndex method, see README):
+     * @example Just like insert, you can use any shape here (or object with a qtRegions method, see README):
      * ```typescript
      * tree.retrieve(new Rectangle({ x: 25, y: 25, width: 10, height: 10, data: 'data' }));
      * tree.retrieve(new Circle({ x: 25, y: 25, r: 10, data: 512 }));

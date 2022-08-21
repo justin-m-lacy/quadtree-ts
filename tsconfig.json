@@ -1,5 +1,11 @@
 {
     "extends": "@tsconfig/recommended/tsconfig.json",
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "**/*.spec.ts"]
+    "paths": [],
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
 }

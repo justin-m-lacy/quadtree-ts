@@ -1,5 +1,5 @@
-import { Quadtree } from './Quadtree';
-import { Rectangle } from './Rectangle';
+import { Quadtree } from './quadtree';
+import { Rectangle } from './shapes/rectangle';
 
 //This file only exports the "1.0" basics: Quadtree and Quadtree.Rectangle
 //UMD/browser: export everything under a 'Quadtree' namespace

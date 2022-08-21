@@ -1,7 +1,7 @@
-import { Quadtree } from './Quadtree';
-import { Rectangle } from './Rectangle';
-import { Circle } from './Circle';
-import { Line } from './Line';
+import { Quadtree } from './quadtree';
+import { Rectangle } from './shapes/rectangle';
+import { Circle } from './shapes/circle';
+import { Line } from './shapes/line';
 
 //This file exports all classes and utility functions
 //UMD/browser: export everything under a 'Quadtree' namespace

@@ -1,4 +1,5 @@
-import type { NodeGeometry, Indexable } from './types';
+import type { NodeGeometry, Indexable } from '../types';
+import { QuadRegion, QuadRegions } from '../regions';
 
 /**
  * Line Geometry
@@ -103,7 +104,7 @@ export interface LineProps<CustomDataType = void> extends LineGeometry {
  * 
  * @example With custom class extending Line (implements {@link LineGeometry} (x1, y1, x2, y2)):
  * ```javascript
- * // extending inherits the qtIndex method
+ * // extending inherits the qtRegions method
  * class Laser extends Line {
  *   
  *   constructor(props) {
@@ -133,10 +134,10 @@ export interface LineProps<CustomDataType = void> extends LineGeometry {
  *     this.end = [30, 40];
  *   }
  * 
- *   // add a qtIndex method to your class  
- *   qtIndex(node) {
+ *   // add a qtRegions method to your class  
+ *   qtRegions(node) {
  *     // map your properties to LineGeometry
- *     return Line.prototype.qtIndex.call({
+ *     return Line.prototype.qtRegions.call({
  *       x1: this.start[0],
  *       y1: this.start[1],
  *       x2: this.end[0],
@@ -157,22 +158,22 @@ export interface LineProps<CustomDataType = void> extends LineGeometry {
  *   y1: 20, 
  *   x2: 30,
  *   y2: 40,
- *   qtIndex: Line.prototype.qtIndex,
+ *   qtRegions: Line.prototype.qtRegions,
  * });
  * ```
  * 
  * @example With custom object and mapping {@link LineGeometry}:
  * ```javascript
  * // Note: this is not recommended but possible. 
- * // Using this technique, each object would have it's own qtIndex method. 
- * // Rather add qtIndex to your prototype, e.g. by using classes like shown above.
+ * // Using this technique, each object would have it's own qtRegions method. 
+ * // Rather add qtRegions to your prototype, e.g. by using classes like shown above.
  * const player = {
  *   name: 'Jane', 
  *   health: 100,
  *   start: [10, 20], 
  *   end: [30, 40],
- *   qtIndex: function(node) {
- *     return Line.prototype.qtIndex.call({
+ *   qtRegions: function(node) {
+ *     return Line.prototype.qtRegions.call({
  *       x1: this.start[0],
  *       y1: this.start[1],
  *       x2: this.end[0],
@@ -229,10 +230,10 @@ export class Line<CustomDataType = void> implements LineGeometry, Indexable {
      * @param node - Quadtree node to be checked
      * @returns Array containing indexes of intersecting subnodes (0-3 = top-right, top-left, bottom-left, bottom-right)
      */
-    qtIndex(node: NodeGeometry): number[] {
+    qtRegions(node: NodeGeometry): QuadRegion {
 
-        const indexes: number[] = [],
-            w2 = node.width / 2,
+        let regions: QuadRegion = QuadRegions.None;
+        const w2 = node.width / 2,
             h2 = node.height / 2,
             x2 = node.x + w2,
             y2 = node.y + h2;
@@ -249,11 +250,11 @@ export class Line<CustomDataType = void> implements LineGeometry, Indexable {
         for (let i = 0; i < nodes.length; i++) {
             if (Line.intersectRect(this.x1, this.y1, this.x2, this.y2,
                 nodes[i][0], nodes[i][1], nodes[i][0] + w2, nodes[i][1] + h2)) {
-                indexes.push(i);
+                regions |= QuadRegions.FromIndex(i);
             }
         }
 
-        return indexes;
+        return regions;
     }
 
     /**
