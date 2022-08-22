@@ -70,7 +70,7 @@ export interface QuadtreeProps {
  * });
  * ```
  */
-export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable> {
+export class Quadtree<ObjectsType extends Rectangle | Circle | Line> {
 
     /**
      * The numeric boundaries of this node.
@@ -183,6 +183,47 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
         }
     }
 
+    /**
+     * Remove an object from the node.
+     * @param obj 
+     */
+    remove(obj: ObjectsType): void {
+
+        if (this.nodes.length) {
+
+            const regions = this.getRegions(obj);
+
+            for (let i = 0; i < 4; i++) {
+                if (regions & (1 << i)) {
+                    this.nodes[i].remove(obj);
+                }
+            }
+
+        } else {
+
+            const objects = this.objects;
+            for (let i = this.objects.length - 1; i >= 0; i--) {
+
+                if (objects[i] == obj) {
+                    this.quickSplice(objects, i);
+                    return;
+                }
+
+            }
+
+        }
+
+    }
+
+    /**
+     * Quickly splice an item from array when order is not important.
+     * @param a 
+     * @param i 
+     */
+    private quickSplice(a: Array<ObjectsType>, i: number) {
+        a[i] = a[a.length - 1];
+        a.pop();
+    }
 
     /**
      * Insert an object into the node. If the node
@@ -210,6 +251,10 @@ export class Quadtree<ObjectsType extends Rectangle | Circle | Line | Indexable>
                     this.nodes[i].insert(obj);
                 }
             }
+
+        } else if (this.objects.indexOf(obj) >= 0) {
+
+            /// prevent multiple inserts in a single node..
 
         } else if (this.objects.length === this.maxObjects && this.level < this.maxLevels) {
 
